@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>chat</title>
+
+<!-- CSS -->
+<style>
+.myForm {
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.8em;
+padding: 1em;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+
+.myForm * {
+box-sizing: border-box;
+}
+
+.myForm label {
+padding: 0;
+font-weight: bold;
+}
+
+.myForm input {
+border: 1px solid #ccc;
+border-radius: 3px;
+font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+font-size: 0.9em;
+padding: 0.5em;
+}
+
+
+.myForm button {
+padding: 0.7em;
+border-radius: 0.5em;
+background:pink;
+border: none;
+font-weight: bold;
+}
+
+.myForm button:hover {
+background: #ccc;
+cursor: pointer;
+}
+</style>
+
+</head>
+
+
+<body>
+<script src="/socket.io/socket.io.js"></script>
+<script >
+	func=function(event){
+		if(event.keyCode==13){
+			buttonClick();
+			return false;
+		}
+		else return true;
+	}
+	var username;	
+	
+	var socket=io.connect();
+	socket.emit('updatelistnow',function(data){
+		{
+			username=data;
+
+		}	
+	});
+	socket.on('update userlist',function(data){
+		document.getElementById("online").value="";
+		for(i=0;i<data.length;i++){
+			document.getElementById("online").value+=(data[i])[0]+'\n\r';
+		}
+	});
+	buttonClick=function(){
+
+		var newmsg=document.getElementById("newmsg").value;
+		newmsg=username+": "+newmsg;
+			
+		socket.emit('send message',newmsg);
+		document.getElementById("newmsg").value="";
+
+	}
+	socket.on('new message',function(data){
+
+		document.getElementById("msg").value+=data+'\n\r';
+	});
+
+</script>	
+<h1>Chat IO</h1>
+<form class="myForm" method="post" style="align-content: center;">
+
+<p>
+<label> Messages</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label> People online</label> 
+
+<br>
+<textarea id="msg" name="msg" rows="30" cols="50" readonly>
+ 
+</textarea>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<textarea id="online" name="online" rows="30" cols="30" readonly>
+ 
+</textarea>
+</p>
+<input id="newmsg" type="text" placeholder ="type your message here and click send" size="41" onkeypress="return func(event)">
+<button name="sendmsg" id="sendmsg" type="button" onkeypress="return func(event)" onclick="buttonClick();">Send</button>
+
+
+
+
+</form>
+
+</body>
+</html>

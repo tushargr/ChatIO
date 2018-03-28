@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ChatIO</title>
+<link rel="stylesheet" type="text/css" href="form2/view.css" media="all">
+<script type="text/javascript" src="form2/view.js"></script>
+
+</head>
+<body id="main_body" >
+
+	<script src="/socket.io/socket.io.js" ></script>
+	<script>
+		func=function(event){
+			
+			if(event.keyCode==13){
+				buttonClck();
+				return false;
+			}
+			else return true;
+		};
+		var socket=io.connect();
+		buttonClck=function(){
+			
+			var data=document.getElementById('element_1').value;
+			socket.emit('new user',data,function(data){
+				if(data[0]=='f'){
+					alert("username already exists. Please enter other username");
+				}
+				else{
+					window.location.href = "http://dry-tundra-14149.herokuapp.com/"+data[1];
+				}
+			});
+		};
+
+	</script>
+
+
+	<img id="top" src="form2/top.png" alt="">
+	<div id="form_container">
+	
+		<form id="form_65114" class="appnitro"  method="post" >
+					<div class="form_description">
+			<h2>ChatIO</h2>
+			<p>To continue enter a username</p>
+		</div>						
+			<ul >
+			
+					<li id="li_1" >
+		<label class="description" for="element_1">username </label>
+		<div>
+			<input id="element_1" name="element_1" class="element text medium" type="text" maxlength="255" value="" onkeypress="return func(event)"/> 
+		</div> 
+		</li>
+			
+					<li class="buttons">
+			    <input type="hidden" name="form_id" value="65114" />
+			    
+				<input id="newuserRequest" class="button_text" type="button" name="button" value="Enter" onkeypress="return func(event)" onclick="buttonClck();" />
+		</li>
+			</ul>
+		</form>	
+		
+	<img id="bottom" src="form2/bottom.png" alt="">
+	</body>
+</html>
